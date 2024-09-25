@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+    <head>
+        <title>API GitHub</title>
+    </head>
+    <body>
+        <h1>Pesquisa de Usuários no GitHub</h1>
+        <input type="text" id ='usuario-texto' placeholder="Nome do usuário">
+        <button id ='pesquisar-btn'>Pesquisar</button>
+        <p id="infos-usuario">
+
+        </p>
+
+        <script>
+            const paragrafo = document.getElementById('infos-usuario')
+            const botaoPesquisar = document.getElementById('pesquisar-btn')
+
+            const extrairUsuario = () => {
+                const nomeUsuario = document.getElementById('usuario-texto').value
+                return nomeUsuario
+            }
+
+            const pesquisarUsuario = async (nome) => {
+                const usuarioData = await fetch(`https://api.github.com/users/${nome}`)
+                const usuarioJSON = await usuarioData.json()
+                return usuarioJSON
+            }
+
+            const clicarBotao = () => {
+                botaoPesquisar.addEventListener('click', async () => {
+                    const nomeUsuario = extrairUsuario()
+                    const dados = await pesquisarUsuario(nomeUsuario)
+                    if(dados.message == 'Not Found'){
+                        paragrafo.innerText = 'Não foram encontrados usuários para esta pesquisa'
+                    } else {
+                        paragrafo.innerText = JSON.stringify(dados, null, 2)
+                    }
+                })
+            }
+
+            clicarBotao()
+        </script>
+    </body>
+</html>
